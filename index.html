@@ -13,6 +13,10 @@
   <link rel="stylesheet" href="templates.css">
   <link rel="stylesheet" href="facts.css">
   <link rel="stylesheet" href="master-resume.css">
+  <link rel="stylesheet" href="privacy.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -21,6 +25,7 @@
     <button class="ghost" id="openProfiles">当前档案：<span id="currentProfileName">默认档案</span></button>
     <button class="ghost" id="openLibrary"><span id="libraryOwner">当前人员</span>的简历库 <span id="libraryCount">0</span></button>
     <button class="ghost" id="exportBackup">导出备份</button>
+    <button class="ghost" id="clearProfileData">清除当前档案数据</button>
   </header>
 
   <main id="top">
@@ -60,6 +65,7 @@
           <div class="master-title"><div><span>推荐入口</span><h3>导入一份通用原版简历</h3><p>上传 PDF、DOCX 或简历图片，也可直接粘贴完整原版。系统会自动拆成下面可校正的固定事实。</p></div><b id="masterResumeState">尚未导入</b></div>
           <input id="masterResumeInput" type="file" accept=".pdf,.docx,.txt,image/png,image/jpeg,image/webp" multiple hidden>
           <div class="master-dropzone" id="masterResumeDropzone" tabindex="0" role="button"><div class="drop-icon">原</div><div><b>拖入通用原版简历</b><span>支持 PDF、DOCX、TXT、PNG、JPG、WEBP，可上传多页图片</span></div><button class="secondary" type="button">选择原版简历</button></div>
+          <div class="privacy-inline"><b>隐私保护</b><span>公网版直接在你的浏览器中读取文件，不上传原始文件；解析结束后临时文件立即释放。识别出的文字只保存在当前人员、当前浏览器中，可随时清除或导出备份。</span></div>
           <label>通用原版全文<textarea id="masterResumeText" rows="8" placeholder="也可以直接把完整通用简历粘贴到这里。这里只保存原始内容，不根据岗位修改。"></textarea></label>
           <div class="master-actions"><span id="masterImportStatus">导入后会自动提取姓名、经历、教育、工具和语言</span><button class="primary" id="parseMasterResume" type="button">建立 / 更新原始事实层</button></div>
         </section>
@@ -143,7 +149,7 @@
     </section>
 
     <section class="error-center">
-      <div><span class="eyebrow">出现问题时</span><h2>一键生成可上传的错误报告</h2><p>报告包含操作步骤、浏览器信息和错误日志，不包含 API Key。你可以直接把 JSON 文件上传到对话里，我就能定位问题。</p></div>
+      <div><span class="eyebrow">隐私与错误报告</span><h2>文件不上传，问题可定位</h2><p>PDF、DOCX和图片在浏览器内解析，原文件处理后立即释放；识别文字保存在当前浏览器的当前人员档案中。错误报告不包含简历正文或 API Key，可直接上传用于定位问题。</p></div>
       <div class="error-actions"><button class="secondary" id="simulateError">查看报告内容</button><button class="primary" id="downloadReport">下载错误报告</button></div>
     </section>
   </main>
@@ -170,6 +176,7 @@
 
   <div class="toast" id="toast" role="status"></div>
   <script src="app.js"></script>
+  <script src="file-parser.js"></script>
   <script src="import.js"></script>
   <script src="master-resume.js"></script>
   <script src="profiles.js"></script>
