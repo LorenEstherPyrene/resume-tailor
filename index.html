@@ -71,24 +71,27 @@
         </section>
         <div class="form-grid">
           <label>姓名<input data-field="name" placeholder="例如：彭璐"></label>
-          <label>目标方向<input data-field="target" placeholder="例如：内容运营 / 用户运营"></label>
-          <label>手机号<input data-field="phone" placeholder="用于最终简历"></label>
           <label>邮箱<input data-field="email" type="email" placeholder="name@example.com"></label>
           <label>年龄<input data-field="age" placeholder="例如：27"></label>
           <label>现居地<input data-field="location" placeholder="城市"></label>
           <label>最高学历<input data-field="degree" placeholder="硕士 / 本科"></label>
         </div>
-        <label class="wide">自我评价（原版事实）<textarea data-field="selfEvaluation" rows="4" placeholder="写下原版自我评价。生成时会根据当前 JD 重新筛选和润色，不照搬固定话术。"></textarea></label>
-        <label class="wide">游戏经历（如模板需要）<textarea data-field="gameExperience" rows="4" placeholder="游戏名称、游玩时间、类型偏好、社区或二创观察等事实。没有可留空。"></textarea></label>
-        <div class="repeat-head"><h3>经历证据</h3><button class="link-button" id="addExperience">＋ 添加经历</button></div>
+        <div class="repeat-head"><h3>AI 定向修改内容</h3><span class="fact-hint">以下内容不是固定话术，会根据每个 JD 重新筛选、排序和润色</span></div>
+        <label class="wide">自我评价（原始材料）<textarea data-field="selfEvaluation" rows="4" placeholder="可粘贴原版内容；AI 会结合岗位要求重写。"></textarea></label>
+        <div class="repeat-head"><h3>项目 / 工作经历</h3><button class="link-button" id="addExperience">＋ 单独添加一份经历</button></div>
         <div id="experienceList" class="experience-list"></div>
-        <div class="repeat-head"><h3>教育与能力事实</h3><span class="fact-hint">这里只保存原始信息，生成时按岗位重新表达</span></div>
         <div class="form-grid">
-          <label>教育经历（事实）<textarea data-field="education" rows="5" placeholder="学校、专业、学历、时间、研究方向、课程或项目，每段一行"></textarea><small>生成时保留学校与学历事实，只突出和当前岗位有关的研究、课程及项目。</small></label>
-          <label>工具、能力与语言（事实）<textarea data-field="skills" rows="5" placeholder="例如：数据工具、内容平台、办公软件、语言能力、证书，每类一行"></textarea><small>生成时根据 JD 筛选、分类和排序，并改成岗位常用表达；不会凭空增加技能。</small></label>
+          <label>教育经历（原始材料）<textarea data-field="education" rows="6" placeholder="学校、专业、学历、时间、研究方向或课程。AI 会按岗位突出相关内容。"></textarea></label>
+          <label>相关技能（原始材料）<textarea data-field="skills" rows="6" placeholder="工具、平台、语言、证书等事实。AI 会按 JD 筛选和排序。"></textarea></label>
         </div>
-        <div class="repeat-head"><h3>其他栏目</h3><button class="link-button" id="addCustomSection">＋ 手动添加栏目</button></div>
-        <div id="customSectionList" class="experience-list"></div>
+        <section class="master-resume-box portfolio-box">
+          <div class="master-title"><div><span>补充证据</span><h3>导入作品集资料</h3><p>作品集与原始简历分开保存，生成时由 AI 结合 JD 选择相关项目和成果。</p></div><b id="portfolioState">尚未导入</b></div>
+          <input id="portfolioInput" type="file" accept=".pdf,.docx,.txt,image/png,image/jpeg,image/webp" multiple hidden>
+          <div class="master-dropzone" id="portfolioDropzone" tabindex="0" role="button"><div class="drop-icon">作</div><div><b>拖入作品集文件</b><span>支持 PDF、DOCX、TXT、PNG、JPG、WEBP，也可在下方直接粘贴</span></div><button class="secondary" type="button">选择作品集</button></div>
+          <label>作品集全文<textarea id="portfolioText" rows="8" placeholder="粘贴作品集、项目说明、成果数据或案例内容。"></textarea></label>
+          <div class="master-actions"><span id="portfolioStatus">只作为 AI 润色的事实来源，不会与原始简历混在一起</span></div>
+        </section>
+        <div hidden><button id="addCustomSection"></button><div id="customSectionList"></div></div>
         <div class="sticky-actions"><span>资料会自动保存</span><button class="primary" data-go="jd">下一步：添加岗位 JD</button></div>
       </div>
 
@@ -100,7 +103,7 @@
         </div>
         <label class="wide">岗位页面地址<input data-field="jobUrl" type="url" placeholder="https://..."></label>
         <input id="jdImageInput" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
-        <div class="jd-image-dropzone" id="jdImageDropzone" tabindex="0" role="button"><div class="drop-icon">▧</div><div><b>拖入岗位截图，自动识别 JD</b><span>支持 PNG、JPG、WEBP，可一次拖入多张长截图</span></div><button class="secondary" type="button">选择岗位截图</button></div>
+        <div class="jd-image-dropzone" id="jdImageDropzone" tabindex="0" role="button"><div class="drop-icon">▧</div><div><b>拖入或粘贴岗位截图，自动识别 JD</b><span>支持 PNG、JPG、WEBP；复制截图后按 Command+V / Ctrl+V</span></div><button class="secondary" type="button">选择岗位截图</button></div>
         <div class="jd-image-status" id="jdImageStatus"></div>
         <label class="wide">JD 正文<textarea data-field="jdText" rows="13" placeholder="粘贴岗位职责、任职要求、加分项……"></textarea></label>
         <div class="jd-summary" id="jdSummary"><div><b>等待分析</b><span>粘贴至少 30 个字后，将自动提取岗位关键词。</span></div></div>
@@ -170,8 +173,8 @@
   <dialog id="profileManager" class="library-dialog profile-dialog">
     <div class="library-head"><div><span class="eyebrow">人员档案</span><h2>每个人独立保存</h2><p>新建后会在单独窗口打开，资料库、历史简历与岗位分类互不混合。</p></div><button class="close-profile-dialog" aria-label="关闭">×</button></div>
     <form id="newProfileForm" class="profile-form">
-      <label>姓名<input name="name" required placeholder="姓名"></label><label>目标方向<input name="target" placeholder="例如：内容运营"></label>
-      <label>手机号<input name="phone" placeholder="固定基础信息"></label><label>邮箱<input name="email" type="email" placeholder="固定基础信息"></label>
+      <label>姓名<input name="name" required placeholder="姓名"></label><label>邮箱<input name="email" type="email" placeholder="固定基础信息"></label>
+      <input name="target" value="" hidden><input name="phone" value="" hidden>
       <label>年龄<input name="age" placeholder="例如：27"></label><label>现居地<input name="location" placeholder="城市"></label><label>最高学历<input name="degree" placeholder="硕士 / 本科"></label>
       <button class="primary" type="submit">新建并在单独窗口打开</button>
     </form>
@@ -181,6 +184,7 @@
   <div class="toast" id="toast" role="status"></div>
   <script src="app.js"></script>
   <script src="file-parser.js"></script>
+  <script src="portfolio.js"></script>
   <script src="import.js"></script>
   <script src="master-resume.js"></script>
   <script src="profiles.js"></script>
