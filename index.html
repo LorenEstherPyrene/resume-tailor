@@ -74,10 +74,12 @@
           <label>目标方向<input data-field="target" placeholder="例如：内容运营 / 用户运营"></label>
           <label>手机号<input data-field="phone" placeholder="用于最终简历"></label>
           <label>邮箱<input data-field="email" type="email" placeholder="name@example.com"></label>
+          <label>年龄<input data-field="age" placeholder="例如：27"></label>
           <label>现居地<input data-field="location" placeholder="城市"></label>
           <label>最高学历<input data-field="degree" placeholder="硕士 / 本科"></label>
         </div>
-        <label class="wide">一句话职业定位<textarea data-field="positioning" rows="2" placeholder="你是谁 + 擅长解决什么问题。不要写‘责任心强、学习能力强’。"></textarea></label>
+        <label class="wide">自我评价（原版事实）<textarea data-field="selfEvaluation" rows="4" placeholder="写下原版自我评价。生成时会根据当前 JD 重新筛选和润色，不照搬固定话术。"></textarea></label>
+        <label class="wide">游戏经历（如模板需要）<textarea data-field="gameExperience" rows="4" placeholder="游戏名称、游玩时间、类型偏好、社区或二创观察等事实。没有可留空。"></textarea></label>
         <div class="repeat-head"><h3>经历证据</h3><button class="link-button" id="addExperience">＋ 添加经历</button></div>
         <div id="experienceList" class="experience-list"></div>
         <div class="repeat-head"><h3>教育与能力事实</h3><span class="fact-hint">这里只保存原始信息，生成时按岗位重新表达</span></div>
@@ -85,6 +87,8 @@
           <label>教育经历（事实）<textarea data-field="education" rows="5" placeholder="学校、专业、学历、时间、研究方向、课程或项目，每段一行"></textarea><small>生成时保留学校与学历事实，只突出和当前岗位有关的研究、课程及项目。</small></label>
           <label>工具、能力与语言（事实）<textarea data-field="skills" rows="5" placeholder="例如：数据工具、内容平台、办公软件、语言能力、证书，每类一行"></textarea><small>生成时根据 JD 筛选、分类和排序，并改成岗位常用表达；不会凭空增加技能。</small></label>
         </div>
+        <div class="repeat-head"><h3>其他栏目</h3><button class="link-button" id="addCustomSection">＋ 手动添加栏目</button></div>
+        <div id="customSectionList" class="experience-list"></div>
         <div class="sticky-actions"><span>资料会自动保存</span><button class="primary" data-go="jd">下一步：添加岗位 JD</button></div>
       </div>
 
@@ -109,7 +113,7 @@
           <div class="fit-score"><strong id="fitScore">--</strong><span>岗位匹配度</span><small>仅衡量关键词覆盖，不代表录用概率</small></div>
           <div class="keyword-box"><h3>建议优先呈现</h3><div id="keywords" class="chips"></div></div>
         </div>
-        <div class="guardrail"><b>全模块定向改写已开启</b><span>职业概述、经历、教育和技能都会随 JD 调整；不会补造数据、职责、团队规模或成果。</span></div>
+        <div class="guardrail"><b>按原模板定向润色</b><span>自我评价、游戏经历、项目经历、教育和技能会随 JD 调整；不会擅自增加模板栏目，也不会补造事实。</span></div>
         <div class="generate-options">
           <label>语言风格<select data-field="tone"><option>直接、克制、专业</option><option>偏业务结果</option><option>偏创意表达</option></select></label>
           <label>简历长度<select data-field="length"><option value="2">两页完整</option><option value="1">一页精简</option></select></label>
@@ -168,7 +172,7 @@
     <form id="newProfileForm" class="profile-form">
       <label>姓名<input name="name" required placeholder="姓名"></label><label>目标方向<input name="target" placeholder="例如：内容运营"></label>
       <label>手机号<input name="phone" placeholder="固定基础信息"></label><label>邮箱<input name="email" type="email" placeholder="固定基础信息"></label>
-      <label>现居地<input name="location" placeholder="城市"></label><label>最高学历<input name="degree" placeholder="硕士 / 本科"></label>
+      <label>年龄<input name="age" placeholder="例如：27"></label><label>现居地<input name="location" placeholder="城市"></label><label>最高学历<input name="degree" placeholder="硕士 / 本科"></label>
       <button class="primary" type="submit">新建并在单独窗口打开</button>
     </form>
     <div class="profile-list-head"><b>已有个人档案</b><span>点击档案会在新窗口打开</span></div><div id="profileList" class="profile-list"></div>
