@@ -1,5 +1,6 @@
 state.portfolio=state.portfolio||{text:'',files:[],updatedAt:null};
 const portfolioText=document.querySelector('#portfolioText'),portfolioPicker=document.querySelector('#portfolioInput'),portfolioDrop=document.querySelector('#portfolioDropzone'),portfolioStatus=document.querySelector('#portfolioStatus'),portfolioState=document.querySelector('#portfolioState');
+const portfolioDialog=document.querySelector('#portfolioDialog');document.querySelector('#openPortfolio').onclick=()=>portfolioDialog.showModal();document.querySelector('.close-portfolio-dialog').onclick=()=>portfolioDialog.close();portfolioDialog.addEventListener('click',e=>{if(e.target===portfolioDialog)portfolioDialog.close()});
 portfolioText.value=state.portfolio.text||'';
 function updatePortfolioState(){const ready=!!portfolioText.value.trim();portfolioState.textContent=ready?`已保存 · ${portfolioText.value.length} 字`:'尚未导入';portfolioState.classList.toggle('ready',ready)}
 portfolioText.addEventListener('input',()=>{state.portfolio.text=portfolioText.value;state.portfolio.updatedAt=new Date().toISOString();save();updatePortfolioState()});
