@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="master-resume.css">
   <link rel="stylesheet" href="privacy.css">
   <link rel="stylesheet" href="portfolio.css">
+  <link rel="stylesheet" href="ai-settings.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
@@ -25,6 +26,7 @@
     <div class="save-state"><i></i><span id="saveState">仅保存在此浏览器</span></div>
     <button class="ghost" id="openProfiles">当前档案：<span id="currentProfileName">默认档案</span></button>
     <button class="ghost" id="openLibrary"><span id="libraryOwner">当前人员</span>的简历库 <span id="libraryCount">0</span></button>
+    <button class="ghost ai-connect-button" id="openAISettings">AI 连接</button>
     <button class="ghost" id="exportBackup">导出备份</button>
     <button class="ghost" id="clearProfileData">清除当前档案数据</button>
   </header>
@@ -57,7 +59,6 @@
         <button data-panel="jd"><b>2</b><span>岗位 JD</span></button>
         <button data-panel="generate"><b>3</b><span>定向生成</span></button>
         <button data-panel="preview"><b>4</b><span>简历预览</span></button>
-        <button data-panel="settings"><b>5</b><span>模型设置</span></button>
       </nav>
 
       <div class="panel active" id="panel-profile">
@@ -142,10 +143,11 @@
         <article id="resumePaper" class="resume-paper" contenteditable="true" spellcheck="false"></article>
       </div>
 
-      <div class="panel" id="panel-settings">
-        <div class="section-head"><div><span>05 / 模型连接</span><h2>优先连接本机 Codex</h2></div><p>本地桥接会复用这台电脑已经登录的 Codex，不需要在网页填写 OpenAI API Key。</p></div>
+      <dialog id="aiSettingsDialog" class="library-dialog ai-settings-dialog"><button class="close-ai-settings" aria-label="关闭">×</button>
+        <div class="section-head"><div><span>AI 连接</span><h2>Codex 自动连接，也可使用 DeepSeek、豆包或 Gemini</h2></div><p>本地 Codex 不需要 API Key；其他模型需要各平台提供的 API Key，免费网页账号不能直接作为 API 使用。</p></div>
         <div class="local-status" id="localStatus"><i></i><div><b>正在检测本机 Codex…</b><span>请通过“启动简历工坊.command”打开网页</span></div><button class="secondary" id="detectCodex">重新检测</button></div>
         <div class="provider-grid" id="providers"></div>
+        <div class="connection-help" id="providerHelp">Codex 会自动检测本机桥接。</div>
         <div class="model-config">
           <label>接口地址<input data-field="apiEndpoint" placeholder="OpenAI-compatible API endpoint"></label>
           <label>模型名称<input data-field="modelName" placeholder="例如：deepseek-chat / gemini-2.5-pro"></label>
@@ -153,7 +155,7 @@
           <button class="secondary" id="testConnection">测试配置</button>
         </div>
         <p class="security-note">本机 Codex 通过 127.0.0.1 桥接，网页不保存 OpenAI 密钥。模型推理仍会经过 Codex 服务。其他模型的 API Key 仅保存在当前浏览器。</p>
-      </div>
+      </dialog>
     </section>
 
     <section class="error-center">
