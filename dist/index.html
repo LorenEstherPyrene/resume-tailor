@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="把个人经历整理成可复用资料库，并针对不同岗位 JD 生成真实、清晰、可验证的简历。">
+  <title>简历定向工坊</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="library.css">
+  <link rel="stylesheet" href="import.css">
+  <link rel="stylesheet" href="profiles.css">
+  <link rel="stylesheet" href="jd-image.css">
+  <link rel="stylesheet" href="templates.css">
+  <link rel="stylesheet" href="facts.css">
+  <link rel="stylesheet" href="master-resume.css">
+  <link rel="stylesheet" href="privacy.css">
+  <link rel="stylesheet" href="portfolio.css">
+  <link rel="stylesheet" href="ai-settings.css">
+  <link rel="stylesheet" href="photo.css">
+  <link rel="stylesheet" href="layout-fixes.css">
+  <link rel="stylesheet" href="review.css">
+  <link rel="stylesheet" href="section-editor.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="简历定向工坊首页"><span>履</span><b>简历定向工坊</b></a>
+    <div class="save-state"><i></i><span id="saveState">仅保存在此浏览器</span></div>
+    <button class="ghost" id="openProfiles">当前档案：<span id="currentProfileName">默认档案</span></button>
+    <button class="ghost" id="openLibrary"><span id="libraryOwner">当前人员</span>的简历库 <span id="libraryCount">0</span></button>
+    <button class="ghost ai-connect-button" id="openAISettings">AI 连接</button>
+    <button class="ghost" id="exportBackup">导出备份</button>
+    <button class="ghost" id="clearProfileData">清除当前档案数据</button>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">把经历保存一次，为每个岗位重新组织</div>
+        <h1>让 HR 先看到你的价值，<br><em>再看到你的经历。</em></h1>
+        <p>不虚构、不堆词。把岗位真正关注的能力放到前面，保留每条表述的事实依据，并排成可直接投递的简历。</p>
+        <div class="hero-actions">
+          <button class="primary" data-go="profile">开始建立资料库</button>
+          <button class="secondary" data-go="jd">已有资料，分析 JD</button>
+        </div>
+      </div>
+      <div class="workflow-card" aria-label="产品工作流程">
+        <div class="metric"><strong id="completeness">0%</strong><span>资料完整度</span></div>
+        <ol>
+          <li class="active"><b>01</b><span>个人事实库<small>经历只录入一次</small></span></li>
+          <li><b>02</b><span>岗位拆解<small>职责 · 能力 · 关键词</small></span></li>
+          <li><b>03</b><span>定向改写<small>价值优先 · 证据可追溯</small></span></li>
+          <li><b>04</b><span>排版导出<small>A4 模版 · PDF</small></span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <nav class="steps" aria-label="制作步骤">
+        <button class="active" data-panel="profile"><b>1</b><span>我的资料</span></button>
+        <button data-panel="jd"><b>2</b><span>岗位 JD</span></button>
+        <button data-panel="generate"><b>3</b><span>修改确认</span></button>
+        <button data-panel="preview"><b>4</b><span>复制 / 排版</span></button>
+      </nav>
+
+      <div class="panel active" id="panel-profile">
+        <div class="section-head"><div><span>01 / 原始事实层</span><h2>这里只记录事实，不作为固定简历话术</h2></div><p>生成每个岗位简历时，经历、教育和技能都会根据 JD 重新筛选、排序和表达；学校、时间、职责和成果等事实不会被改动。</p></div>
+        <section class="master-resume-box">
+          <div class="master-title"><div><span>推荐入口</span><h3>导入一份通用原版简历</h3><p>上传 PDF、DOCX 或简历图片，也可直接粘贴完整原版。系统会自动拆成下面可校正的固定事实。</p></div><b id="masterResumeState">尚未导入</b></div>
+          <input id="masterResumeInput" type="file" accept=".pdf,.docx,.txt,image/png,image/jpeg,image/webp" multiple hidden>
+          <div class="master-dropzone" id="masterResumeDropzone" tabindex="0" role="button"><div class="drop-icon">原</div><div><b>拖入通用原版简历</b><span>支持 PDF、DOCX、TXT、PNG、JPG、WEBP，可上传多页图片</span></div><button class="secondary" type="button">选择原版简历</button></div>
+          <div class="privacy-inline"><b>隐私保护</b><span>公网版直接在你的浏览器中读取文件，不上传原始文件；解析结束后临时文件立即释放。识别出的文字只保存在当前人员、当前浏览器中，可随时清除或导出备份。</span></div>
+          <label>通用原版全文<textarea id="masterResumeText" rows="8" placeholder="也可以直接把完整通用简历粘贴到这里。这里只保存原始内容，不根据岗位修改。"></textarea></label>
+          <div class="master-actions"><span id="masterImportStatus">导入后会自动提取姓名、经历、教育、工具和语言</span><div><button class="secondary" id="rescanExperiences" type="button">重新扫描并替换经历</button><button class="primary" id="parseMasterResume" type="button">建立 / 更新原始事实层</button></div></div>
+        </section>
+        <div class="form-grid">
+          <label>姓名<input data-field="name" placeholder="例如：彭璐"></label>
+          <label>邮箱<input data-field="email" type="email" placeholder="name@example.com"></label>
+          <label>年龄<input data-field="age" placeholder="例如：27"></label>
+          <label>现居地<input data-field="location" placeholder="城市"></label>
+          <label>最高学历<input data-field="degree" placeholder="硕士 / 本科"></label>
+          <label class="photo-field">个人照片<div class="photo-control"><img id="photoPreview" alt="个人照片预览"><span id="photoPlaceholder">未上传</span><button class="secondary" id="choosePhoto" type="button">选择照片</button><button class="link-button" id="removePhoto" type="button">删除</button></div><input id="photoInput" type="file" accept="image/png,image/jpeg,image/webp" hidden></label>
+        </div>
+        <div class="repeat-head"><h3>AI 定向修改内容</h3><span class="fact-hint">以下内容不是固定话术，会根据每个 JD 重新筛选、排序和润色</span></div>
+        <label class="wide">自我评价（当前定向内容）<textarea data-field="selfEvaluation" rows="4" placeholder="导入时保存原始内容；AI生成后自动回填当前岗位版本。"></textarea></label>
+        <div class="repeat-head"><h3>项目 / 工作经历</h3><div class="experience-head-actions"><button class="link-button" id="openPortfolio">＋ 导入 / 补充作品集</button><button class="link-button" id="addExperience">＋ 单独添加一份经历</button></div></div>
+        <div id="experienceList" class="experience-list"></div>
+        <div class="form-grid">
+          <label>教育经历（当前定向内容）<textarea data-field="education" rows="6" placeholder="导入时保存原始内容；AI生成后自动回填当前岗位版本。"></textarea></label>
+          <label>相关技能（当前定向内容）<textarea data-field="skills" rows="6" placeholder="导入时保存原始内容；AI生成后自动回填当前岗位版本。"></textarea></label>
+        </div>
+        <dialog id="portfolioDialog" class="library-dialog portfolio-dialog"><button class="close-portfolio-dialog" aria-label="关闭">×</button><section class="master-resume-box portfolio-box">
+          <div class="master-title"><div><span>补充证据</span><h3>导入作品集资料</h3><p>作品集与原始简历分开保存，生成时由 AI 结合 JD 选择相关项目和成果。</p></div><b id="portfolioState">尚未导入</b></div>
+          <input id="portfolioInput" type="file" accept=".pdf,.docx,.txt,image/png,image/jpeg,image/webp" multiple hidden>
+          <div class="master-dropzone" id="portfolioDropzone" tabindex="0" role="button"><div class="drop-icon">作</div><div><b>拖入作品集文件</b><span>支持 PDF、DOCX、TXT、PNG、JPG、WEBP，也可在下方直接粘贴</span></div><button class="secondary" type="button">选择作品集</button></div>
+          <label>作品集全文<textarea id="portfolioText" rows="8" placeholder="粘贴作品集、项目说明、成果数据或案例内容。"></textarea></label>
+          <div class="master-actions"><span id="portfolioStatus">只作为 AI 润色的事实来源，不会与原始简历混在一起</span></div>
+        </section></dialog>
+        <div hidden><button id="addCustomSection"></button><div id="customSectionList"></div></div>
+        <div class="sticky-actions"><span>资料会自动保存</span><button class="primary" data-go="jd">下一步：添加岗位 JD</button></div>
+      </div>
+
+      <div class="panel" id="panel-jd">
+        <div class="section-head"><div><span>02 / 岗位理解</span><h2>贴入岗位页面或 JD 正文</h2></div><p>网页地址用于记录岗位来源。若网页限制读取，直接粘贴正文最稳妥。</p></div>
+        <div class="form-grid">
+          <label>公司<input data-field="company" placeholder="公司名称"></label>
+          <label>岗位名称<input data-field="jobTitle" placeholder="岗位名称"></label>
+        </div>
+        <label class="wide">岗位页面地址<input data-field="jobUrl" type="url" placeholder="https://..."></label>
+        <input id="jdImageInput" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+        <div class="jd-image-dropzone" id="jdImageDropzone" tabindex="0" role="button"><div class="drop-icon">▧</div><div><b>拖入或粘贴岗位截图，自动识别 JD</b><span>支持 PNG、JPG、WEBP；复制截图后按 Command+V / Ctrl+V</span></div><button class="secondary" type="button">选择岗位截图</button></div>
+        <div class="jd-image-status" id="jdImageStatus"></div>
+        <label class="wide">JD 正文<textarea data-field="jdText" rows="13" placeholder="粘贴岗位职责、任职要求、加分项……"></textarea></label>
+        <div class="jd-summary" id="jdSummary"><div><b>等待分析</b><span>粘贴至少 30 个字后，将自动提取岗位关键词。</span></div></div>
+        <div class="sticky-actions"><button class="secondary" data-go="profile">返回资料库</button><button class="primary" id="analyzeJd">分析并进入生成</button></div>
+      </div>
+
+      <div class="panel" id="panel-generate">
+        <div class="section-head"><div><span>03 / AI 修改确认</span><h2>先看修改稿，确认后再排版</h2></div><p>红色标记表示与原始简历不同的内容。你可以直接编辑，确认无误后再进入复制与模板排版。</p></div>
+        <div class="fit-grid">
+          <div class="fit-score"><strong id="fitScore">--</strong><span>岗位匹配度</span><small>仅衡量关键词覆盖，不代表录用概率</small></div>
+          <div class="keyword-box"><h3>建议优先呈现</h3><div id="keywords" class="chips"></div></div>
+        </div>
+        <div class="guardrail"><b>按原模板定向润色</b><span>自我评价、游戏经历、项目经历、教育和技能会随 JD 调整；不会擅自增加模板栏目，也不会补造事实。</span></div>
+        <div class="generate-options">
+          <label>语言风格<select data-field="tone"><option>直接、克制、专业</option><option>偏业务结果</option><option>偏创意表达</option></select></label>
+          <label>简历长度<select data-field="length"><option value="2">两页完整</option><option value="1">一页精简</option></select></label>
+          <button class="primary large" id="generateResume">生成定向简历</button>
+        </div>
+        <div id="generationNote" class="empty-note">完成资料和 JD 后，即可生成可编辑版本。</div>
+        <section id="reviewStage" class="review-stage" hidden><div class="review-legend"><b>AI 修改稿</b><span><i></i>红色区域为重新组织或润色的内容</span></div><article id="reviewPaper" class="review-paper" contenteditable="true" spellcheck="false"></article><div class="sticky-actions"><button class="secondary" id="regenerateResume">重新生成</button><button class="primary" id="confirmResume">确认修改，进入照片模板</button></div></section>
+      </div>
+
+      <div class="panel" id="panel-preview">
+        <div class="preview-toolbar">
+          <div><span>04 / 照片模板</span><h2>手动编辑并复制照片模板</h2></div>
+          <div><button class="secondary" id="addResumeSection">＋ 添加模板栏目</button><button class="secondary" id="saveResume">保存到简历库</button><button class="secondary" id="copyResume">复制全文</button><button class="primary" id="printResume">导出 PDF</button></div>
+        </div>
+        <div class="print-help">直接点击模板中的文字即可修改；支持添加或删除栏目、复制全文和导出 PDF。</div>
+        <section id="templateOutput">
+        <div class="print-help">导出时选择“另存为 PDF”，纸张 A4，边距设为“默认”，并开启“背景图形”。</div>
+        <div class="template-picker" id="templatePicker" aria-label="选择简历模版">
+          <button data-template="business-red"><i></i><b>商务红</b><span>运营 / 通用</span></button>
+          <button data-template="tech-blue"><i></i><b>科技蓝</b><span>产品 / 数据 / AI</span></button>
+          <button data-template="modern-green"><i></i><b>墨绿现代</b><span>内容 / 品牌</span></button>
+          <button data-template="minimal-black"><i></i><b>黑白极简</b><span>正式 / ATS</span></button>
+          <button data-template="creative-purple"><i></i><b>紫色创意</b><span>新媒体 / 创意</span></button>
+        </div>
+        <article id="resumePaper" class="resume-paper" contenteditable="true" spellcheck="false"></article>
+        </section>
+      </div>
+
+      <dialog id="aiSettingsDialog" class="library-dialog ai-settings-dialog"><button class="close-ai-settings" aria-label="关闭">×</button>
+        <div class="section-head"><div><span>AI 连接</span><h2>Codex 自动连接，也可使用 DeepSeek、豆包或 Gemini</h2></div><p>本地 Codex 不需要 API Key；其他模型需要各平台提供的 API Key，免费网页账号不能直接作为 API 使用。</p></div>
+        <div class="local-status" id="localStatus"><i></i><div><b>正在检测本机 Codex…</b><span>请通过“启动简历工坊.command”打开网页</span></div><button class="secondary" id="detectCodex">重新检测</button></div>
+        <div class="provider-grid" id="providers"></div>
+        <div class="connection-help" id="providerHelp">Codex 会自动检测本机桥接。</div>
+        <div class="model-config">
+          <label>接口地址<input data-field="apiEndpoint" placeholder="OpenAI-compatible API endpoint"></label>
+          <label>模型名称<input data-field="modelName" placeholder="例如：deepseek-chat / gemini-2.5-pro"></label>
+          <label>API Key<input data-field="apiKey" type="password" autocomplete="off" placeholder="仅存本机"></label>
+          <button class="secondary" id="testConnection">测试配置</button>
+        </div>
+        <p class="security-note">本机 Codex 通过 127.0.0.1 桥接，网页不保存 OpenAI 密钥。模型推理仍会经过 Codex 服务。其他模型的 API Key 仅保存在当前浏览器。</p>
+      </dialog>
+    </section>
+
+    <section class="error-center">
+      <div><span class="eyebrow">隐私与错误报告</span><h2>文件不上传，问题可定位</h2><p>PDF、DOCX和图片在浏览器内解析，原文件处理后立即释放；识别文字保存在当前浏览器的当前人员档案中。错误报告不包含简历正文或 API Key，可直接上传用于定位问题。</p></div>
+      <div class="error-actions"><button class="secondary" id="simulateError">查看报告内容</button><button class="primary" id="downloadReport">下载错误报告</button></div>
+    </section>
+  </main>
+
+  <dialog id="resumeLibrary" class="library-dialog">
+    <div class="library-head"><div><span class="eyebrow">当前人员独立空间</span><h2><span id="libraryDialogOwner">当前人员</span>的简历库</h2><p>这里只显示当前人员的历史简历；其他人员的资料不会出现在这里。</p></div><button class="close-dialog" aria-label="关闭">×</button></div>
+    <div class="library-tools"><input id="librarySearch" placeholder="搜索岗位、公司或版本名称"><select id="categoryFilter"><option value="">全部岗位分类</option></select><input id="resumeImport" type="file" accept=".pdf,.docx,.txt,.json" multiple hidden><button class="secondary" id="syncFacts">同步到事实库</button><button class="secondary" id="importResumes">批量导入</button><button class="primary" id="saveFromLibrary">保存当前简历</button></div>
+    <div class="resume-dropzone" id="resumeDropzone" tabindex="0" role="button" aria-label="拖动简历文件到这里导入">
+      <div class="drop-icon">↓</div><div><b>把以前的简历拖到这里</b><span>支持同时拖入 PDF、DOCX、TXT、JSON，单个文件不超过 20MB</span></div><button class="secondary" type="button">选择文件</button>
+    </div>
+    <div id="libraryList" class="library-list"></div>
+  </dialog>
+
+  <dialog id="profileManager" class="library-dialog profile-dialog">
+    <div class="library-head"><div><span class="eyebrow">人员档案</span><h2>每个人独立保存</h2><p>新建后会在单独窗口打开，资料库、历史简历与岗位分类互不混合。</p></div><button class="close-profile-dialog" aria-label="关闭">×</button></div>
+    <form id="newProfileForm" class="profile-form">
+      <label>姓名<input name="name" required placeholder="姓名"></label><label>邮箱<input name="email" type="email" placeholder="固定基础信息"></label>
+      <input name="target" value="" hidden><input name="phone" value="" hidden>
+      <label>年龄<input name="age" placeholder="例如：27"></label><label>现居地<input name="location" placeholder="城市"></label><label>最高学历<input name="degree" placeholder="硕士 / 本科"></label>
+      <button class="primary" type="submit">新建并在单独窗口打开</button>
+    </form>
+    <div class="profile-list-head"><b>已有个人档案</b><span>点击档案会在新窗口打开</span></div><div id="profileList" class="profile-list"></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+  <script src="file-parser.js"></script>
+  <script src="photo.js"></script>
+  <script src="portfolio.js"></script>
+  <script src="import.js"></script>
+  <script src="master-resume.js"></script>
+  <script src="profiles.js"></script>
+  <script src="jd-image.js"></script>
+  <script src="review.js"></script>
+  <script src="tailor.js"></script>
+  <script src="templates.js"></script>
+  <script src="section-editor.js"></script>
+</body>
+</html>
