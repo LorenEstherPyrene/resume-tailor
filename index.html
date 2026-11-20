@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="privacy.css">
   <link rel="stylesheet" href="portfolio.css">
   <link rel="stylesheet" href="ai-settings.css">
+  <link rel="stylesheet" href="photo.css">
+  <link rel="stylesheet" href="layout-fixes.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
@@ -77,6 +79,7 @@
           <label>年龄<input data-field="age" placeholder="例如：27"></label>
           <label>现居地<input data-field="location" placeholder="城市"></label>
           <label>最高学历<input data-field="degree" placeholder="硕士 / 本科"></label>
+          <label class="photo-field">个人照片<div class="photo-control"><img id="photoPreview" alt="个人照片预览"><span id="photoPlaceholder">未上传</span><button class="secondary" id="choosePhoto" type="button">选择照片</button><button class="link-button" id="removePhoto" type="button">删除</button></div><input id="photoInput" type="file" accept="image/png,image/jpeg,image/webp" hidden></label>
         </div>
         <div class="repeat-head"><h3>AI 定向修改内容</h3><span class="fact-hint">以下内容不是固定话术，会根据每个 JD 重新筛选、排序和润色</span></div>
         <label class="wide">自我评价（原始材料）<textarea data-field="selfEvaluation" rows="4" placeholder="可粘贴原版内容；AI 会结合岗位要求重写。"></textarea></label>
@@ -187,6 +190,7 @@
   <div class="toast" id="toast" role="status"></div>
   <script src="app.js"></script>
   <script src="file-parser.js"></script>
+  <script src="photo.js"></script>
   <script src="portfolio.js"></script>
   <script src="import.js"></script>
   <script src="master-resume.js"></script>
