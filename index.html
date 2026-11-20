@@ -83,12 +83,12 @@
           <label class="photo-field">个人照片<div class="photo-control"><img id="photoPreview" alt="个人照片预览"><span id="photoPlaceholder">未上传</span><button class="secondary" id="choosePhoto" type="button">选择照片</button><button class="link-button" id="removePhoto" type="button">删除</button></div><input id="photoInput" type="file" accept="image/png,image/jpeg,image/webp" hidden></label>
         </div>
         <div class="repeat-head"><h3>AI 定向修改内容</h3><span class="fact-hint">以下内容不是固定话术，会根据每个 JD 重新筛选、排序和润色</span></div>
-        <label class="wide">自我评价（原始材料）<textarea data-field="selfEvaluation" rows="4" placeholder="可粘贴原版内容；AI 会结合岗位要求重写。"></textarea></label>
+        <label class="wide">自我评价（当前定向内容）<textarea data-field="selfEvaluation" rows="4" placeholder="导入时保存原始内容；AI生成后自动回填当前岗位版本。"></textarea></label>
         <div class="repeat-head"><h3>项目 / 工作经历</h3><div class="experience-head-actions"><button class="link-button" id="openPortfolio">＋ 导入 / 补充作品集</button><button class="link-button" id="addExperience">＋ 单独添加一份经历</button></div></div>
         <div id="experienceList" class="experience-list"></div>
         <div class="form-grid">
-          <label>教育经历（原始材料）<textarea data-field="education" rows="6" placeholder="学校、专业、学历、时间、研究方向或课程。AI 会按岗位突出相关内容。"></textarea></label>
-          <label>相关技能（原始材料）<textarea data-field="skills" rows="6" placeholder="工具、平台、语言、证书等事实。AI 会按 JD 筛选和排序。"></textarea></label>
+          <label>教育经历（当前定向内容）<textarea data-field="education" rows="6" placeholder="导入时保存原始内容；AI生成后自动回填当前岗位版本。"></textarea></label>
+          <label>相关技能（当前定向内容）<textarea data-field="skills" rows="6" placeholder="导入时保存原始内容；AI生成后自动回填当前岗位版本。"></textarea></label>
         </div>
         <dialog id="portfolioDialog" class="library-dialog portfolio-dialog"><button class="close-portfolio-dialog" aria-label="关闭">×</button><section class="master-resume-box portfolio-box">
           <div class="master-title"><div><span>补充证据</span><h3>导入作品集资料</h3><p>作品集与原始简历分开保存，生成时由 AI 结合 JD 选择相关项目和成果。</p></div><b id="portfolioState">尚未导入</b></div>
