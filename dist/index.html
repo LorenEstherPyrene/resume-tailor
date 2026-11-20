@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="layout-fixes.css">
   <link rel="stylesheet" href="review.css">
   <link rel="stylesheet" href="section-editor.css">
+  <link rel="stylesheet" href="career-engine.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
@@ -123,6 +124,11 @@
           <div class="fit-score"><strong id="fitScore">--</strong><span>岗位匹配度</span><small>仅衡量关键词覆盖，不代表录用概率</small></div>
           <div class="keyword-box"><h3>建议优先呈现</h3><div id="keywords" class="chips"></div></div>
         </div>
+        <section class="career-analysis" id="careerAnalysis" hidden>
+          <div class="analysis-head"><div><span>通用岗位分析</span><h3 id="careerTrack">正在识别岗位类型</h3></div><small>只使用原始事实层中能够证明的内容</small></div>
+          <div class="analysis-columns"><div><h4>岗位真正看重什么</h4><div id="rolePriorities"></div></div><div><h4>事实证据匹配</h4><div id="evidenceScorecard"></div></div></div>
+          <div class="analysis-foot"><div><b>ATS 关键词</b><span id="atsKeywords"></span></div><div><b>不能硬写</b><span id="honestGaps"></span></div></div>
+        </section>
         <div class="guardrail"><b>按原模板定向润色</b><span>自我评价、游戏经历、项目经历、教育和技能会随 JD 调整；不会擅自增加模板栏目，也不会补造事实。</span></div>
         <div class="generate-options">
           <label>语言风格<select data-field="tone"><option>直接、克制、专业</option><option>偏业务结果</option><option>偏创意表达</option></select></label>
@@ -131,6 +137,7 @@
         </div>
         <div id="generationNote" class="empty-note">完成资料和 JD 后，即可生成可编辑版本。</div>
         <section id="reviewStage" class="review-stage" hidden><div class="review-legend"><b>AI 修改稿</b><span><i></i>红色区域为重新组织或润色的内容</span></div><article id="reviewPaper" class="review-paper" contenteditable="true" spellcheck="false"></article><div class="sticky-actions"><button class="secondary" id="regenerateResume">重新生成</button><button class="primary" id="confirmResume">确认修改，进入照片模板</button></div></section>
+        <section class="quality-report" id="qualityReport" hidden></section>
       </div>
 
       <div class="panel" id="panel-preview">
@@ -202,6 +209,7 @@
   <script src="master-resume.js"></script>
   <script src="profiles.js"></script>
   <script src="jd-image.js"></script>
+  <script src="career-engine.js"></script>
   <script src="review.js"></script>
   <script src="tailor.js"></script>
   <script src="templates.js"></script>
