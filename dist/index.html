@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="section-editor.css">
   <link rel="stylesheet" href="career-engine.css">
   <link rel="stylesheet" href="experience-order.css">
+  <link rel="stylesheet" href="optional-save.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
@@ -70,11 +71,12 @@
       <div class="panel active" id="panel-profile">
         <div class="section-head"><div><span>01 / 原始事实层</span><h2>这里只记录事实，不作为固定简历话术</h2></div><p>生成每个岗位简历时，经历、教育和技能都会根据 JD 重新筛选、排序和表达；学校、时间、职责和成果等事实不会被改动。</p></div>
         <section class="master-resume-box">
-          <div class="master-title"><div><span>推荐入口</span><h3>导入一份通用原版简历</h3><p>上传 PDF、DOCX 或简历图片，也可直接粘贴完整原版。系统会自动拆成下面可校正的固定事实。</p></div><b id="masterResumeState">尚未导入</b></div>
+          <div class="master-title"><div><span>推荐入口</span><h3>导入一份通用原版简历</h3><p>有 PDF 就直接扫描全文；没有文件可粘贴或手动输入。Codex 会拆成可校正的独立事实，是否另存到简历库由你决定。</p></div><b id="masterResumeState">尚未导入</b></div>
           <input id="masterResumeInput" type="file" accept=".pdf,.docx,.txt,image/png,image/jpeg,image/webp" multiple hidden>
           <div class="master-dropzone" id="masterResumeDropzone" tabindex="0" role="button"><div class="drop-icon">原</div><div><b>拖入通用原版简历</b><span>支持 PDF、DOCX、TXT、PNG、JPG、WEBP，可上传多页图片</span></div><button class="secondary" type="button">选择原版简历</button></div>
           <div class="privacy-inline"><b>隐私保护</b><span>公网版直接在你的浏览器中读取文件，不上传原始文件；解析结束后临时文件立即释放。识别出的文字只保存在当前人员、当前浏览器中，可随时清除或导出备份。</span></div>
           <label>通用原版全文<textarea id="masterResumeText" rows="8" placeholder="也可以直接把完整通用简历粘贴到这里。这里只保存原始内容，不根据岗位修改。"></textarea></label>
+          <label class="save-master-option"><input id="saveMasterToLibrary" type="checkbox"> <span>同时保存一份到当前人员的简历库（默认不保存）</span></label>
           <div class="master-actions"><span id="masterImportStatus">导入后会自动提取姓名、经历、教育、工具和语言</span><div><button class="secondary" id="rescanExperiences" type="button">重新扫描并替换经历</button><button class="primary" id="parseMasterResume" type="button">建立 / 更新原始事实层</button></div></div>
         </section>
         <div class="form-grid">
