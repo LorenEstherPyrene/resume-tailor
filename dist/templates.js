@@ -1,0 +1,6 @@
+const TEMPLATE_CLASSES=['business-red','tech-blue','modern-green','minimal-black','creative-purple'];
+state.prefs.template=state.prefs.template||'business-red';
+function applyTemplate(name){if(!TEMPLATE_CLASSES.includes(name))name='business-red';const paper=document.querySelector('#resumePaper');paper.classList.remove(...TEMPLATE_CLASSES);paper.classList.add(name);state.prefs.template=name;document.querySelectorAll('#templatePicker button').forEach(b=>b.classList.toggle('active',b.dataset.template===name));save()}
+document.querySelectorAll('#templatePicker button').forEach(b=>b.onclick=()=>{applyTemplate(b.dataset.template);toast('已切换简历模版')});applyTemplate(state.prefs.template);
+const baseTemplateSave=saveResumeVersion;saveResumeVersion=function(){baseTemplateSave();const x=state.resumes[0];x.template=state.prefs.template;save();renderLibrary()};document.querySelector('#saveResume').onclick=saveResumeVersion;document.querySelector('#saveFromLibrary').onclick=saveResumeVersion;
+document.querySelector('#libraryList').addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(!b)return;const x=state.resumes.find(v=>v.id===b.dataset.open);setTimeout(()=>applyTemplate(x?.template||'business-red'))});
