@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="experience-order.css">
   <link rel="stylesheet" href="optional-save.css">
   <link rel="stylesheet" href="career-hub.css">
+  <link rel="stylesheet" href="career-tools.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
@@ -64,11 +65,57 @@
     <section class="workspace">
       <nav class="steps" aria-label="制作步骤">
         <button data-panel="hub" aria-label="职业中心"><b>⌂</b><span>职业中心</span></button>
+        <button data-panel="tools" aria-label="求职工具"><b>✦</b><span>求职工具</span></button>
         <button class="active" data-panel="profile" aria-label="我的资料"><b>1</b><span>我的资料</span></button>
         <button data-panel="jd" aria-label="岗位 JD"><b>2</b><span>岗位 JD</span></button>
         <button data-panel="generate" aria-label="修改确认"><b>3</b><span>修改确认</span></button>
         <button data-panel="preview" aria-label="复制与排版"><b>4</b><span>复制 / 排版</span></button>
       </nav>
+
+      <div class="panel" id="panel-tools">
+        <div class="hub-heading tools-heading">
+          <div><span class="eyebrow">CAREER INTELLIGENCE</span><h2>评估岗位、检查简历、研究行业</h2><p>把三个独立工作流集中在一处：先判断岗位值不值得投，再检查材料质量，最后补充近 30 天行业信息。</p></div>
+          <span class="local-only-badge">仅保存在当前浏览器</span>
+        </div>
+        <div class="tool-switcher" role="tablist" aria-label="求职工具分类">
+          <button class="active" data-tool-tab="evaluate" role="tab">岗位评估</button>
+          <button data-tool-tab="audit" role="tab">简历质检</button>
+          <button data-tool-tab="trends" role="tab">近30天情报</button>
+        </div>
+
+        <section class="career-tool active" id="tool-evaluate" data-tool-panel="evaluate">
+          <div class="tool-intro"><div><span>CAREER OPS</span><h3>这份岗位值得投入时间吗？</h3><p>结合当前 JD、事实证据和你的主观意愿给出申请优先级；分数只用于决策，不代表录用概率。</p></div><strong id="evaluationScore">--</strong></div>
+          <div class="evaluation-layout">
+            <form id="evaluationForm" class="evaluation-form">
+              <label>公司<input name="company" placeholder="默认读取当前 JD 公司"></label>
+              <label>岗位<input name="role" placeholder="默认读取当前 JD 岗位"></label>
+              <label>个人兴趣<select name="interest"><option value="5">非常想做</option><option value="4">比较感兴趣</option><option value="3" selected>可以考虑</option><option value="2">兴趣一般</option><option value="1">仅作备选</option></select></label>
+              <label>现实可行性<select name="feasibility"><option value="5">地点、薪资和时间都合适</option><option value="4">大部分合适</option><option value="3" selected>尚需确认</option><option value="2">存在明显限制</option><option value="1">目前不可行</option></select></label>
+              <label class="full">补充判断<textarea name="notes" rows="4" placeholder="例如：需要确认远程政策、作品集要求或语言要求"></textarea></label>
+              <button class="primary" type="submit">生成申请建议</button>
+            </form>
+            <div class="evaluation-result" id="evaluationResult"><div class="tool-empty">填写当前 JD 后即可评估。没有证据的要求会被列为缺口，不会算作已匹配。</div></div>
+          </div>
+        </section>
+
+        <section class="career-tool" id="tool-audit" data-tool-panel="audit">
+          <div class="tool-intro"><div><span>IMPECCABLE CHECK</span><h3>投递前质量检查</h3><p>检查事实边界、结构、可读性、岗位针对性和页面完整性；不会替你虚构缺失内容。</p></div><button class="primary" id="runResumeAudit">开始检查</button></div>
+          <div class="audit-summary" id="auditSummary"><strong>等待检查</strong><span>建议在生成或编辑简历后运行一次。</span></div>
+          <div class="audit-grid" id="auditGrid"></div>
+        </section>
+
+        <section class="career-tool" id="tool-trends" data-tool-panel="trends">
+          <div class="tool-intro"><div><span>LAST 30 DAYS</span><h3>行业情报研究台</h3><p>生成针对近 30 天的多来源检索入口，并把你的结论保存在当前档案。网页不会在后台抓取或登录任何平台。</p></div><b id="trendWindow"></b></div>
+          <form id="trendForm" class="trend-form">
+            <label>研究主题<input name="topic" required placeholder="例如：Seedance AI短剧、葡语短剧、AI视频招聘"></label>
+            <fieldset><legend>信息来源</legend><label><input type="checkbox" name="source" value="github" checked> GitHub</label><label><input type="checkbox" name="source" value="youtube" checked> YouTube</label><label><input type="checkbox" name="source" value="reddit" checked> Reddit</label><label><input type="checkbox" name="source" value="web" checked> 网页资讯</label></fieldset>
+            <button class="primary" type="submit">生成研究入口</button>
+          </form>
+          <div class="trend-links" id="trendLinks"></div>
+          <label class="trend-notes">我的研究结论<textarea id="trendNotes" rows="6" placeholder="记录可用于求职、作品集或技能选择的结论；不要把未经核实的信息直接写进简历。"></textarea></label>
+          <div class="trend-history" id="trendHistory"></div>
+        </section>
+      </div>
 
       <div class="panel" id="panel-hub">
         <div class="hub-heading">
@@ -87,6 +134,7 @@
             <label>目标岗位<input id="hubTargetRole" placeholder="例如：AI 内容运营 / 短剧导演"></label>
             <div class="readiness-list" id="readinessList"></div>
             <div class="hub-quick-actions">
+              <button data-go="tools"><b>00</b><span>打开求职工具<small>岗位评估、简历质检与行业情报</small></span></button>
               <button data-go="profile"><b>01</b><span>补充事实库<small>经历、技能与作品证据</small></span></button>
               <button data-go="jd"><b>02</b><span>分析岗位 JD<small>识别重点与诚实缺口</small></span></button>
               <button data-go="preview"><b>03</b><span>查看简历成品<small>编辑、复制或导出 PDF</small></span></button>
@@ -261,5 +309,6 @@
   <script src="templates.js"></script>
   <script src="section-editor.js"></script>
   <script src="career-hub.js"></script>
+  <script src="career-tools.js"></script>
 </body>
 </html>
