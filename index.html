@@ -85,6 +85,23 @@
 
         <section class="career-tool active" id="tool-evaluate" data-tool-panel="evaluate">
           <div class="tool-intro"><div><span>CAREER OPS</span><h3>这份岗位值得投入时间吗？</h3><p>结合当前 JD、事实证据和你的主观意愿给出申请优先级；分数只用于决策，不代表录用概率。</p></div><strong id="evaluationScore">--</strong></div>
+          <section class="jd-quick-scan" aria-labelledby="quickScanTitle">
+            <div class="scan-heading"><div><span>1—6 张·同一岗位</span><h4 id="quickScanTitle">上传或粘贴 JD 截图</h4><p>免费模式先在浏览器本地 OCR；只在识别不清且你同意时，才会将截图发给支持看图的 AI。</p></div><b id="quickScanCount">0 / 6</b></div>
+            <input id="quickJdInput" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+            <div class="quick-scan-drop" id="quickJdDrop" tabindex="0" role="button" aria-label="上传或粘贴岗位截图"><i>▧</i><div><b>拖入连续截图，或按 Command+V / Ctrl+V 粘贴</b><small>由 AI 自动合并、去重并剔除招聘平台杂项</small></div><button class="secondary" type="button">选择截图</button></div>
+            <div class="scan-progress" id="quickScanStatus" role="status">尚未导入截图</div>
+            <div class="scan-review" id="quickScanReview" hidden>
+              <div class="review-head"><div><span>识别确认</span><h4>只核对关键求职信息</h4></div><span id="scanConfidence"></span></div>
+              <div class="review-fields"><label>公司<input id="scanCompany" placeholder="请核对公司名称"></label><label>岗位<input id="scanRole" placeholder="请核对岗位名称"></label></div>
+              <div class="jd-facts" id="scanFacts"></div>
+              <div class="review-actions"><button class="secondary" id="retryQuickScan" type="button">重新上传</button><button class="primary" id="confirmQuickScan" type="button">确认正确，用于评估</button></div>
+            </div>
+          </section>
+          <section class="job-preferences">
+            <div class="preference-head"><div><span>求职策略</span><h4>这次想怎么选工作？</h4></div><small>保存到当前人员档案，下次可直接沿用</small></div>
+            <div class="strategy-options" id="strategyOptions"><label><input type="radio" name="jobStrategy" value="stable">稳妥求职<small>匹配度、入职速度和现实可行性</small></label><label><input type="radio" name="jobStrategy" value="transition">转型发展<small>可迁移能力、学习成本和长期成长</small></label><label><input type="radio" name="jobStrategy" value="explore">开放探索<small>允许跨行业跨岗位，衡量尝试价值</small></label></div>
+            <div class="preference-grid"><label>想去的行业 / 岗位<input id="preferredDirections" placeholder="例如：AI短剧、内容运营、海外市场"></label><label>不接受的条件<input id="dealBreakers" placeholder="例如：高频出差、纯销售、单休"></label><label>地点、远程、薪资与强度<textarea id="practicalNeeds" rows="3" placeholder="只写对决策真正重要的条件"></textarea></label><label>优先考虑<textarea id="careerPriorities" rows="3" placeholder="收入、稳定、成长、兴趣等的优先顺序"></textarea></label></div>
+          </section>
           <div class="evaluation-layout">
             <form id="evaluationForm" class="evaluation-form">
               <label>公司<input name="company" placeholder="默认读取当前 JD 公司"></label>
@@ -96,6 +113,8 @@
             </form>
             <div class="evaluation-result" id="evaluationResult"><div class="tool-empty">填写当前 JD 后即可评估。没有证据的要求会被列为缺口，不会算作已匹配。</div></div>
           </div>
+          <section class="history-match" id="historyMatch" hidden><div class="subsection-head"><div><span>历史简历</span><h4>AI 建议从相似版本继续修改</h4></div><small>最终由你选择，新版本不会覆盖历史简历</small></div><div id="historyCandidates" class="history-candidates"></div></section>
+          <section class="gap-evidence" id="gapEvidence" hidden><div class="subsection-head"><div><span>能力缺口</span><h4>有真实经历就先补证据，再让 AI 润色</h4></div><small>没有证据的要求不会写入简历</small></div><div id="gapChips" class="gap-chips"></div><form id="gapEvidenceForm" class="gap-form"><label>选择要补充的缺口<select name="gap"></select></label><label>工作 / 项目<input name="context" required placeholder="在哪份工作或项目中"></label><label>当时的角色<input name="role" required placeholder="你实际承担的角色"></label><label>时间<input name="date" placeholder="例如：2025.03—2025.06"></label><label class="full">方法、工具、结果与证据<textarea name="details" rows="5" required placeholder="做了什么、怎么做、交付了什么；数字只写真实存在的"></textarea></label><label class="truth-check full"><input type="checkbox" name="truth" required>我确认以上是真实经历，可以保存到个人事实库</label><button class="primary full" type="submit">保存证据并重新评估</button></form></section>
         </section>
 
         <section class="career-tool" id="tool-audit" data-tool-panel="audit">
